@@ -26,10 +26,10 @@
 #define CBORATTR_MAX_SIZE CONFIG_MGMT_CBORATTR_MAX_SIZE
 #endif
 
-#ifdef MYNEWT
-#include "syscfg/syscfg.h"
 #include "tinycbor/cbor_mbuf_reader.h"
 #include "tinycbor/cbor_mbuf_writer.h"
+#ifdef MYNEWT
+#include "syscfg/syscfg.h"
 #include "os/os_mbuf.h"
 #define CBORATTR_MAX_SIZE MYNEWT_VAL(CBORATTR_MAX_SIZE)
 #endif
@@ -396,11 +396,8 @@ cbor_read_flat_attrs(const uint8_t *data, int len,
     CborError err;
 
     cbor_buf_reader_init(&reader, data, len);
-#ifdef __ZEPHYR__
-    err = cbor_parser_cust_reader_init(&reader.r, 0, &parser, &value);
-#else
+
     err = cbor_parser_init(&reader.r, 0, &parser, &value);
-#endif
     if (err != CborNoError) {
         return -1;
     }
